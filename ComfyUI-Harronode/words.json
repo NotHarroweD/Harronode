@@ -1,6 +1,0 @@
-{
-    "colors": ["blue", "teal", "gold", "rainbow", "red", "orange", "white", "cyan", "purple", "green", "yellow", "grey", "silver", "black"],
-    "styles": ["dripping", "colorful", "graffiti", "tattoo", "anime", "pixel art", "8-bit", "16-bit", "32-bit", "metal", "metallic", "spikey", "stone", "splattered", "comic book", "80s", "neon", "3D"],
-    "accents": ["smoke", "fire", "flames", "tentacles", "hell", "glow", "horns", "wings", "halo", "roots", "embossed", "blood", "digital", "ice", "frozen", "japanese", "chrome", "pastel", "robotic", "hearts", "cute", "egyptian", "viking"],
-    "content": ["cat", "sword", "owl", "cat ears", "cthulu", "sun", "roses", "clouds", "space", "stars", "skeletons", "demons", "fog", "trees", "moon", "skulls", "bones", "planet", "earth", "cherry blossom", "pentagram", "crosses", "lightning", "bolts", "crown", "circle", "moth"]
-}
