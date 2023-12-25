@@ -1,6 +1,6 @@
 {
-    "colors": ["blue", "teal", "gold", "rainbow", "red", "orange", "white", "cyan", "purple", "green", "yellow", "grey", "silver", "black"],
-    "styles": ["dripping", "colorful", "graffiti", "tattoo", "anime", "pixel art", "8-bit", "16-bit", "32-bit", "metal", "metallic", "spikey", "stone", "splattered", "comic book", "80s", "neon", "3D"],
-    "accents": ["smoke", "fire", "flames", "tentacles", "hell", "glow", "horns", "wings", "halo", "roots", "embossed", "blood", "digital", "ice", "frozen", "japanese", "chrome", "pastel", "robotic", "hearts", "cute", "egyptian", "viking"],
-    "content": ["cat", "sword", "owl", "cat ears", "cthulu", "sun", "roses", "clouds", "space", "stars", "skeletons", "demons", "fog", "trees", "moon", "skulls", "bones", "planet", "earth", "cherry blossom", "pentagram", "crosses", "lightning", "bolts", "crown", "circle", "moth"]
+  "colors": ["black", "blue", "cyan", "gold", "green", "grey", "orange", "purple", "rainbow", "red", "silver", "teal", "white", "yellow"],
+  "styles": ["16-bit", "3D", "8-bit", "80s", "anime", "colorful", "comic book", "dripping", "graffiti", "metal", "metallic", "neon", "pixel art", "spikey", "splattered", "stone", "tattoo"],
+  "accents": ["blood", "chrome", "cute", "digital", "egyptian", "embossed", "fire", "flames", "frozen", "glow", "hearts", "hell", "horns", "ice", "japanese", "pastel", "robotic", "roots", "smoke", "tentacles", "viking", "wings"],
+  "content": ["anchor", "bones", "cat", "cat ears", "cherry blossom", "circle", "crown", "cthulu", "demons", "earth", "fog", "lightning", "moon", "moth", "owl", "pentagram", "planet", "roses", "skeletons", "skulls", "space", "stars", "sun", "sword", "trees"]
 }
