@@ -21,7 +21,7 @@ To install **Harronode**, follow these steps:
 1. Navigate to the `custom_nodes` directory in your ComfyUI setup.
 2. Clone the repository using Git:
    ```bash
-   git clone https://github.com/NotHarroweD/Harrlogos.git
+   git clone https://github.com/NotHarroweD/Harronode.git
    ```
 
 ### Uninstallation
