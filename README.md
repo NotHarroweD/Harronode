@@ -2,7 +2,7 @@
 # Harronode - Harrlogos Prompt Builder for ComfyUI
 
 ## Introduction
-**Harrlogos** is a custom node designed to streamline the process of building prompts for use with the **Harrlogos SDXL LoRA**. This node simplifies the task of crafting detailed prompts and makes all built-in activation terms readily accessible, enhancing your creativity and efficiency within the ComfyUI environment.
+**Harronode** is a custom node designed to streamline the process of building prompts for use with the **Harrlogos SDXL LoRA**. This node simplifies the task of crafting detailed prompts and makes all built-in activation terms readily accessible, enhancing your creativity and efficiency within the ComfyUI environment.
 
 ## Features
 
@@ -16,7 +16,7 @@
 
 ## Installation
 
-To install **Harrlogos**, follow these steps:
+To install **Harronode**, follow these steps:
 
 1. Navigate to the `custom_nodes` directory in your ComfyUI setup.
 2. Clone the repository using Git:
@@ -26,17 +26,17 @@ To install **Harrlogos**, follow these steps:
 
 ### Uninstallation
 
-To uninstall **Harrlogos**, simply delete the cloned repository from the `custom_nodes` directory.
+To uninstall **Harronode**, simply delete the cloned repository from the `custom_nodes` directory.
 
 ## Usage
 
-Incorporate **Harrlogos** into your ComfyUI workflow with these steps:
+Incorporate **Harronode** into your ComfyUI workflow with these steps:
 
 1. Add a `CLIPTextEncode` node to your canvas.
 2. Convert the desired text into a compatible input.
 3. Connect this text to the STRING output of the `Harrlogos - Prompt Builder`.
 
-By following these steps, you'll be able to integrate **Harrlogos** seamlessly into your projects, leveraging its capabilities to enhance your creative workflow within ComfyUI.
+By following these steps, you'll be able to integrate **Harronode** seamlessly into your projects, leveraging its capabilities to enhance your creative workflow within ComfyUI.
 
 ## Support and Contribution
 
