@@ -43,7 +43,7 @@ By following these steps, you'll be able to integrate **Harrlogos** seamlessly i
 For support, suggestions, or contributions, please visit the [GitHub repository](https://github.com/NotHarroweD/Harrlogos), submit an issue/pull request, or contact me on Discord ( harrowed - Harrowed#0666). I value your feedback greatly!
 
 Harronode designed and written by:
-[HarroweD](https://github.com/NotHarroweD) and [QuadMoon](https://github.com/traugdo)
+[HarroweD](https://github.com/NotHarroweD) and [QuadMoon](https://github.com/traugdor)
 
 ---
 
