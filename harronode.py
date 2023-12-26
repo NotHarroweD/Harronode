@@ -112,7 +112,7 @@ def onprompt_populate_prompt(json_data):
                 inputs = v['inputs']
                 if isinstance(inputs['prompt'], str):
                     inputs['prompt'] = prompt_builder.build_prompt(inputs)
-                    # server.PromptServer.instance.send_sync("harronode-node-feedback", {"node_id": k, "widget_name": "prompt", "type": "STRING", "value": inputs['prompt']})
+                    server.PromptServer.instance.send_sync("harronode-node-feedback", {"node_id": k, "widget_name": "prompt", "type": "STRING", "value": inputs['prompt']})
                     updated_widget_values[k] = inputs['prompt']
     except Exception as e:
         print(f"[WARN] ComfyUI-Harronode: Error on prompt\n{e}")

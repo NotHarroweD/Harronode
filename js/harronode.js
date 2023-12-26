@@ -63,7 +63,7 @@ const doesInputWithNameExist = (node, name) => {
 const HIDDEN_TAG = "harrohide";
 
 // function to hide a widget from view
-function toggleWidget(node, widget, show = false, suffix = "") {
+function harrToggleWidget(node, widget, show = false, suffix = "") {
     if (!widget || doesInputWithNameExist(node, widget.name)) return;
 
     // Store the original properties of the widget if not already stored
@@ -78,7 +78,7 @@ function toggleWidget(node, widget, show = false, suffix = "") {
     widget.computeSize = show ? origProps[widget.name].origComputeSize : () => [0, -4];
 
     // Recursively handle linked widgets if they exist
-    widget.linkedWidgets?.forEach(w => toggleWidget(node, w, ":" + widget.name, show));
+    widget.linkedWidgets?.forEach(w => harrToggleWidget(node, w, ":" + widget.name, show));
 
     // Calculate the new height for the node based on its computeSize method
     const newHeight = node.computeSize()[1];
@@ -88,16 +88,17 @@ function toggleWidget(node, widget, show = false, suffix = "") {
 
 // -- BASE CODE NEEDED BY PROMPT BUILDER
 function updateColorWidgets(node, color_count){
+    console.log("colors", color_count)
     for (let i = 1; i <= 3; i++) {
         //find widget
         const color_picker = findWidgetByName(node, `color_${i}`)
         if(i <= color_count){
             //set visible and required
-            toggleWidget(node, color_picker, true)
+            harrToggleWidget(node, color_picker, true)
         }
         else {
             //hide and set not required
-            toggleWidget(node, color_picker, false)
+            harrToggleWidget(node, color_picker, false)
         }
     }
 }
@@ -108,11 +109,11 @@ function updateStyleWidgets(node, color_count){
         const style_picker = findWidgetByName(node, `style_${i}`)
         if(i <= color_count){
             //set visible and required
-            toggleWidget(node, style_picker, true)
+            harrToggleWidget(node, style_picker, true)
         }
         else {
             //hide and set not required
-            toggleWidget(node, style_picker, false)
+            harrToggleWidget(node, style_picker, false)
         }
     }
 }
@@ -122,11 +123,11 @@ function updateAccentWidgets(node, color_count){
         const accent_picker = findWidgetByName(node, `accent_${i}`)
         if(i <= color_count){
             //set visible and required
-            toggleWidget(node, accent_picker, true)
+            harrToggleWidget(node, accent_picker, true)
         }
         else {
             //hide and set not required
-            toggleWidget(node, accent_picker, false)
+            harrToggleWidget(node, accent_picker, false)
         }
     }
 }
@@ -136,11 +137,11 @@ function updateContentWidgets(node, color_count){
         const content_picker = findWidgetByName(node, `content_${i}`)
         if(i <= color_count){
             //set visible and required
-            toggleWidget(node, content_picker, true)
+            harrToggleWidget(node, content_picker, true)
         }
         else {
             //hide and set not required
-            toggleWidget(node, content_picker, false)
+            harrToggleWidget(node, content_picker, false)
         }
     }
 }
@@ -177,18 +178,33 @@ app.registerExtension({
                     }
                 }
             } else {
-                console.log(`Image Chooser Preview - failed to find ${event.detail.id}`)
+                console.log(`Harronode Prompt Editor - failed to find ${event.detail.node_id}`)
             }
         }
+
+        function harronode_node_feedback(event){
+            const node = app.graph._nodes_by_id[event.detail.node_id];
+            if (node) {
+                if(node.comfyClass == "Harronode"){
+                    let prompt = event.detail.value;
+                    node.widgets[0].inputEl.value = prompt;
+                }
+            }
+            else {
+                console.log(`Harronode Prompt Builder - failed to find ${event.detail.node_id}`);
+            }
+        }
+
         api.addEventListener("harronode-populate-promptEditor", harronode_populate_promptEditor);
+        api.addEventListener("harronode-node-feedback", harronode_node_feedback);
     },
-    nodeCreated(node) {
+    async nodeCreated(node) {
         for (const w of node.widgets || []) {
             let widgetValue = w.value;
 
             // Store the original descriptor if it exists
             let originalDescriptor = Object.getOwnPropertyDescriptor(w, 'value');
-
+            startupLogic(node, w);
             Object.defineProperty(w, 'value', {
                 get() {
                     // If there's an original getter, use it. Otherwise, return widgetValue.
@@ -210,7 +226,6 @@ app.registerExtension({
                 }
             });
         }
-        setTimeout(() => { initialized = true; }, 500);
         //do this if we're messing with the prompt builder
         if(node.comfyClass == "Harronode"){
             node.widgets[0].inputEl.placeholder = "Populated Prompt (Will be generated automatically)";
@@ -221,15 +236,11 @@ app.registerExtension({
         //do this if we're messing with the prompt editor
         if(node.comfyClass == "PromptEditor") {
             const mode = node.widgets.find((w) => w.name === "mode");
-            //node.send_button_widget = node.addWidget("button", "progress_button", "", progressButtonPressed);
-            //node.send_button_widget.name = "Prompt looks good (GO)";
             node.widgets[1].inputEl.placeholder = "Populated Prompt (Will be generated automatically)";
-            //need to call one last time after adding the button
-            //startupLogic(node, node.send_button_widget);
-            // set height after we're done. :)
             console.log("setting size");
             const newHeight = node.computeSize()[1];
             node.setSize([node.size[0], newHeight]);
         }
+        setTimeout(() => { initialized = true; }, 500);
     }
 });
