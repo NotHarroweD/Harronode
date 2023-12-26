@@ -6,15 +6,17 @@
 """
 
 
-from .harronode import Harronode
+from .harronode import Harronode,PromptEditor
+from .harroserver import HarroServer
 
 NODE_CLASS_MAPPINGS = {
-    "Harronode": Harronode
-
+    "Harronode": Harronode,
+    "PromptEditor": PromptEditor
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Harronode": "Harronode - Prompt Builder"
+    "Harronode": "Harronode - Prompt Builder",
+    "PromptEditor": "Harronode - Prompt Editor"
 }
 
 WEB_DIRECTORY = "js"
