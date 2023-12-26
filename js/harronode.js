@@ -1,4 +1,5 @@
 import { app } from "../../scripts/app.js";
+import { api } from "../../scripts/api.js";
 
 let origProps = {};
 let initialized = false;
@@ -9,6 +10,9 @@ const harroWidgetHandlers = {
         'style_count': handleStyleCount,
         'accent_count': handleAccentCount,
         'content_count': handleContentCount
+    },
+    "PromptEditor": {
+        'mode': handleMode
     },
 };
 
@@ -26,6 +30,22 @@ function handleAccentCount(node, widget) {
 
 function handleContentCount(node, widget) {
     updateContentWidgets(node, widget.value);
+}
+
+function handleMode (node, widget) {
+    const goButton = findWidgetByName(node, "Prompt looks good (GO)");
+    const stopButton = findWidgetByName(node, "I need to adjust something (STOP)");
+    const promptEditor = findWidgetByName(node, "promptEditor");
+    if (widget.value == "Bypass"){
+        goButton.disabled = 1==1;
+        stopButton.disabled = 1==1;
+        promptEditor.inputEl.disabled = 1==1;
+    }
+    else {
+        goButton.disabled = 1==0;
+        stopButton.disabled = 1==0;
+        promptEditor.inputEl.disabled = 1==0;
+    }
 }
 
 //-------function credit to efficiency nodes for comfyUI---------//
@@ -132,6 +152,25 @@ function startupLogic (node, widget) //change name
 
 }
 
+/*
+Comfy uses 'clicked' to make the button flash; so just disable that.
+This *doesn't* stop the callback, it's totally cosmetic!
+*/
+function enable_disabling(button) {
+    Object.defineProperty(button, 'clicked', {
+        get : function() { return this._clicked; },
+        set : function(v) { this._clicked = (v && this.name!=''); }
+    })
+}
+
+function cancelButtonPressed (){
+
+}
+
+function progressButtonPressed (){
+
+}
+
 app.registerExtension({
     name: "harronode.harronode",
     nodeCreated(node) {
@@ -140,8 +179,6 @@ app.registerExtension({
 
             // Store the original descriptor if it exists
             let originalDescriptor = Object.getOwnPropertyDescriptor(w, 'value');
-
-            startupLogic(node, w);
 
             Object.defineProperty(w, 'value', {
                 get() {
@@ -171,6 +208,18 @@ app.registerExtension({
             node.widgets[1].inputEl.placeholder = "Input Text to Display on Image";
             const prompt = node.widgets.find((w) => w.name == 'prompt');
             prompt.inputEl.disabled = 1 == 1;
+        }
+        if(node.comfyClass == "PromptEditor") {
+            console.log (node.widgets);
+            const mode = node.widgets.find((w) => w.name === "mode");
+            node.cancel_button_widget = node.addWidget("button", "cancel_button", "", cancelButtonPressed);
+            node.send_button_widget = node.addWidget("button", "progress_button", "", progressButtonPressed);
+            node.send_button_widget.name = "Prompt looks good (GO)";
+            node.cancel_button_widget.name = "I need to adjust something (STOP)";
+            enable_disabling(node.cancel_button_widget);
+            enable_disabling(node.send_button_widget);
+            startupLogic(node, node.cancel_button_widget);
+            startupLogic(node, node.send_button_widget);
         }
     }
 });
