@@ -16,6 +16,8 @@ const harroWidgetHandlers = {
     },
 };
 
+// ------------------ HANDLERS
+
 function handleColorCount(node, widget) {
     updateColorWidgets(node, widget.value);
 }
@@ -34,19 +36,18 @@ function handleContentCount(node, widget) {
 
 function handleMode (node, widget) {
     const goButton = findWidgetByName(node, "Prompt looks good (GO)");
-    const stopButton = findWidgetByName(node, "I need to adjust something (STOP)");
     const promptEditor = findWidgetByName(node, "promptEditor");
     if (widget.value == "Bypass"){
         goButton.disabled = 1==1;
-        stopButton.disabled = 1==1;
         promptEditor.inputEl.disabled = 1==1;
     }
     else {
         goButton.disabled = 1==0;
-        stopButton.disabled = 1==0;
         promptEditor.inputEl.disabled = 1==0;
     }
 }
+
+//----------------------END HANDLERS
 
 //-------function credit to efficiency nodes for comfyUI---------//
 
@@ -60,6 +61,7 @@ const doesInputWithNameExist = (node, name) => {
 
 const HIDDEN_TAG = "harrohide";
 
+// function to hide a widget from view
 function toggleWidget(node, widget, show = false, suffix = "") {
     if (!widget || doesInputWithNameExist(node, widget.name)) return;
 
@@ -83,6 +85,7 @@ function toggleWidget(node, widget, show = false, suffix = "") {
 }
 //--------------------------END CREDIT---------------------------//
 
+// -- BASE CODE NEEDED BY PROMPT BUILDER
 function updateColorWidgets(node, color_count){
     for (let i = 1; i <= 3; i++) {
         //find widget
@@ -141,6 +144,8 @@ function updateContentWidgets(node, color_count){
     }
 }
 
+// -- END BASE CODE NEEDED BY PROMPT BUILDER
+
 function startupLogic (node, widget) //change name
 {
     // Retrieve the handler for the current node title and widget name
@@ -149,21 +154,6 @@ function startupLogic (node, widget) //change name
         handler(node, widget);
     }
     prompt = findWidgetByName(node, 'prompt');
-
-}
-
-/*
-Comfy uses 'clicked' to make the button flash; so just disable that.
-This *doesn't* stop the callback, it's totally cosmetic!
-*/
-function enable_disabling(button) {
-    Object.defineProperty(button, 'clicked', {
-        get : function() { return this._clicked; },
-        set : function(v) { this._clicked = (v && this.name!=''); }
-    })
-}
-
-function cancelButtonPressed (){
 
 }
 
@@ -202,23 +192,21 @@ app.registerExtension({
             });
         }
         setTimeout(() => { initialized = true; }, 500);
-
+        //do this if we're messing with the prompt builder
         if(node.comfyClass == "Harronode"){
             node.widgets[0].inputEl.placeholder = "Populated Prompt (Will be generated automatically)";
             node.widgets[1].inputEl.placeholder = "Input Text to Display on Image";
             const prompt = node.widgets.find((w) => w.name == 'prompt');
             prompt.inputEl.disabled = 1 == 1;
         }
+        //do this if we're messing with the prompt editor
         if(node.comfyClass == "PromptEditor") {
             console.log (node.widgets);
             const mode = node.widgets.find((w) => w.name === "mode");
-            node.cancel_button_widget = node.addWidget("button", "cancel_button", "", cancelButtonPressed);
             node.send_button_widget = node.addWidget("button", "progress_button", "", progressButtonPressed);
             node.send_button_widget.name = "Prompt looks good (GO)";
-            node.cancel_button_widget.name = "I need to adjust something (STOP)";
-            enable_disabling(node.cancel_button_widget);
             enable_disabling(node.send_button_widget);
-            startupLogic(node, node.cancel_button_widget);
+            //need to call one last time after adding the button
             startupLogic(node, node.send_button_widget);
         }
     }
