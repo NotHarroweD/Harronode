@@ -3,6 +3,7 @@ import { api } from "../../scripts/api.js";
 
 let origProps = {};
 let initialized = false;
+let previousPrompt = "";
 
 const harroWidgetHandlers = {
     "Harronode": {
@@ -35,14 +36,14 @@ function handleContentCount(node, widget) {
 }
 
 function handleMode (node, widget) {
-    const goButton = findWidgetByName(node, "Prompt looks good (GO)");
+    //const goButton = findWidgetByName(node, "Prompt looks good (GO)");
     const promptEditor = findWidgetByName(node, "promptEditor");
     if (widget.value == "Bypass"){
-        goButton.disabled = 1==1;
+        //goButton.disabled = 1==1;
         promptEditor.inputEl.disabled = 1==1;
     }
     else {
-        goButton.disabled = 1==0;
+        //goButton.disabled = 1==0;
         promptEditor.inputEl.disabled = 1==0;
     }
 }
@@ -163,6 +164,24 @@ function progressButtonPressed (){
 
 app.registerExtension({
     name: "harronode.harronode",
+    setup(){
+        function harronode_populate_promptEditor(event)
+        {
+            const node = app.graph._nodes_by_id[event.detail.node_id];
+            if (node) {
+                if(node.comfyClass == "PromptEditor") {
+                    let prompt = event.detail.value;
+                    if (prompt != previousPrompt){
+                        previousPrompt = prompt;
+                        node.widgets[1].inputEl.value = event.detail.value;
+                    }
+                }
+            } else {
+                console.log(`Image Chooser Preview - failed to find ${event.detail.id}`)
+            }
+        }
+        api.addEventListener("harronode-populate-promptEditor", harronode_populate_promptEditor);
+    },
     nodeCreated(node) {
         for (const w of node.widgets || []) {
             let widgetValue = w.value;
@@ -201,13 +220,16 @@ app.registerExtension({
         }
         //do this if we're messing with the prompt editor
         if(node.comfyClass == "PromptEditor") {
-            console.log (node.widgets);
             const mode = node.widgets.find((w) => w.name === "mode");
-            node.send_button_widget = node.addWidget("button", "progress_button", "", progressButtonPressed);
-            node.send_button_widget.name = "Prompt looks good (GO)";
-            enable_disabling(node.send_button_widget);
+            //node.send_button_widget = node.addWidget("button", "progress_button", "", progressButtonPressed);
+            //node.send_button_widget.name = "Prompt looks good (GO)";
+            node.widgets[1].inputEl.placeholder = "Populated Prompt (Will be generated automatically)";
             //need to call one last time after adding the button
-            startupLogic(node, node.send_button_widget);
+            //startupLogic(node, node.send_button_widget);
+            // set height after we're done. :)
+            console.log("setting size");
+            const newHeight = node.computeSize()[1];
+            node.setSize([node.size[0], newHeight]);
         }
     }
 });

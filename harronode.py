@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from server import PromptServer
 import server
 
 class Harronode:
@@ -55,26 +56,34 @@ class PromptEditor:
     def INPUT_TYPES(cls):
         
         inputs = {
+            "optional": {
+                "prompt": ("STRING", {"forceInput": True}) # forceInput makes it an input node
+            },
             "required": {
-                "prompt": ("STRING", {"forceInput": True}), # forceInput makes it an input node
                 "mode": (["Edit", "Bypass"],{}),
                 "promptEditor": ("STRING", {"default": "", "multiline": True})
             },
             "hidden": {
                 "unique_id": "UNIQUE_ID",
-                "extra_pnginfo": "EXTRA_PNGINFO",
+                "extra_pnginfo": "EXTRA_PNGINFO"
             },
         }
         return inputs
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "EditPrompt"
-    OUTPUT_NODE = True
-    OUTPUT_IS_LIST = (True,)
     CATEGORY = "Harronode/PromptBuilder"
 
-    def EditPrompt(self, prompt, mode, promptEditor, unique_id = None, extra_pnginfo=None):
-        print("Enter EditPrompt")
+    def EditPrompt(self, *args, **kwargs):
+        print("EditPrompt")
+        output = ''
+        prompt = ''
+        unique_id = kwargs["unique_id"]
+        extra_pnginfo = kwargs["extra_pnginfo"]
+        mode = kwargs["mode"]
+        promptEditor = kwargs["promptEditor"]
+        if "prompt" in kwargs:
+            prompt = kwargs["prompt"]
         if unique_id and extra_pnginfo and "workflow" in extra_pnginfo:
             workflow = extra_pnginfo["workflow"]
             target_id = unique_id
@@ -85,10 +94,9 @@ class PromptEditor:
                     break
             # if the node is found, set the value of the textbox (3rd input, 0-indexed) to the prompt
             if node:
-                node["widgets_values"][2] = [prompt]
+                print(node)
             if mode == "Edit":
-                # edit the prompt and wait for user to click GO
-                # set output
+                server.PromptServer.instance.send_sync("harronode-populate-promptEditor", {"node_id": unique_id, "value": prompt,})
                 output = promptEditor,
             else:
                 # just set the output to the string we input
@@ -104,7 +112,7 @@ def onprompt_populate_prompt(json_data):
                 inputs = v['inputs']
                 if isinstance(inputs['prompt'], str):
                     inputs['prompt'] = prompt_builder.build_prompt(inputs)
-                    server.PromptServer.instance.send_sync("harronode-node-feedback", {"node_id": k, "widget_name": "prompt", "type": "STRING", "value": inputs['prompt']})
+                    # server.PromptServer.instance.send_sync("harronode-node-feedback", {"node_id": k, "widget_name": "prompt", "type": "STRING", "value": inputs['prompt']})
                     updated_widget_values[k] = inputs['prompt']
     except Exception as e:
         print(f"[WARN] ComfyUI-Harronode: Error on prompt\n{e}")
