@@ -7,14 +7,14 @@
 
 
 from .harronode import Harronode
+from .harroserver import HarroServer
 
 NODE_CLASS_MAPPINGS = {
-    "Harronode": Harronode
-
+    "Harronode": Harronode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Harronode": "Harronode - Prompt Builder"
+    "Harronode": "Harronode - Prompt Builder",
 }
 
 WEB_DIRECTORY = "js"
