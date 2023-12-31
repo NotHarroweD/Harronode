@@ -18,9 +18,7 @@ class Harronode:
         # setup inputs for the node
         inputs =  {
             "required": {
-                "prompt": ("STRING", {"default": "", "multiline": True}),
-                "text_on_image": ("STRING", {"default": "", "multiline": True}),
-                "mode": ("BOOLEAN", {"default": True, "label_on": "Editable", "label_off": "Fixed"}),
+                "desired_image_text": ("STRING", {"default": "", "multiline": False}),
                 "text_weight": ("FLOAT", {"default": 1.0, "min":0.5, "max":1.5, "step": 0.01}),
                 "color_count": ("INT", {"default": 1, "min": 0, "max": 3, "step": 1}),
                 "style_count": ("INT", {"default": 1, "min": 1, "max": 2, "step": 1}),
@@ -40,6 +38,8 @@ class Harronode:
 
         for i in range (1, 4):
             inputs["required"][f"content_{i}"] = (content, {"default": content[0] if content else None})
+
+        inputs["required"]["prompt"] = ("STRING", {"default": "", "multiline": True})
 
         return inputs
 
